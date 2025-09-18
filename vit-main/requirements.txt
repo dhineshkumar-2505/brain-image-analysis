@@ -1,0 +1,9 @@
+Flask
+torch
+transformers
+Pillow
+numpy
+lime
+scikit-image
+matplotlib
+Werkzeug

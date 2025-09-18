@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload MRI Image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- Google Fonts and Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">MS<span>Detect</span></div>
+        <input type="checkbox" id="click">
+        <label for="click" class="menu-btn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('upload_and_predict') }}" class="active">Predict</a></li>
+        </ul>
+    </nav>
+
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <div class="upload-container">
+            <h1>Upload MRI Image for Prediction</h1>
+            <form action="{{ url_for('upload_and_predict') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="file-upload" id="file-upload">
+                    <input type="file" name="file" id="file-input" accept="image/*" required>
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p>Drag and drop your file here or click to select</p>
+                </div>
+
+                <!-- Image Preview -->
+                <div id="preview-container" style="display:none; margin-top:20px; text-align:center;">
+                    <h3>Uploaded Image:</h3>
+                    <img id="preview-img" src="" alt="Preview" style="max-width:300px; border-radius:10px; box-shadow:0px 4px 6px rgba(0,0,0,0.2);">
+                </div>
+
+                <button type="submit" class="btn btn-upload">Predict</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2024 Multiple Sclerosis Detection Project</p>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Drag, Drop & Preview -->
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const fileUpload = document.querySelector('.file-upload');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImg = document.getElementById('preview-img');
+
+        fileUpload.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileInput.files = e.dataTransfer.files;
+            showPreview(fileInput.files[0]);
+            fileUpload.classList.remove('dragover');
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files && fileInput.files[0]) {
+                showPreview(fileInput.files[0]);
+            }
+        });
+
+        function showPreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
